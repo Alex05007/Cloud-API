@@ -20,25 +20,25 @@
         switch($fileType) {
             case "jpg" || "jpeg" || "png":
                 if (!str_contains($check, "image")) {
-                    echo "file_content_error";
+                    echo "file_content_error1";
                     $uploadOk = 1;
                 }
                 break;
             case "pdf":
                 if (!str_contains($check, "pdf")) {
-                    echo "file_content_error";
+                    echo "file_content_error2";
                     $uploadOk = 1;
                 }
                 break;
             case "doc" || "docx" || "xls" || "xlsx" || "ppt" || "pptx":
                 if (!str_contains($check, "vnd.ms-")) {
-                    echo "file_content_error";
+                    echo "file_content_error3";
                     $uploadOk = 1;
                 }
                 break;
             case "mp4" || "mov":
                 if (!str_contains($check, "audio/mpeg")) {
-                    echo "file_content_error";
+                    echo "file_content_error4";
                     $uploadOk = 1;
                 }
                 break;

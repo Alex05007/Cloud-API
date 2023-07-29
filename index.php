@@ -1,13 +1,23 @@
+<?php
+    if (!isset($upload)) {
+        $upload = "upload.php";
+    }
+    if (!isset($uploadText)) {
+        $uploadText = "Drop your files here or select them.";
+    }
+?>
+
 <div
     id="drop_zone"
     ondrop="dropHandler(event);"
     ondragover="dragOverHandler(event);"
     ondragleave="dragLeave(event);"
     onclick="fileExplore();">
-    <p id="drop_zone_text">Drop your files here or select them.</p>
+    <p id="drop_zone_text"><?php echo $uploadText; ?></p>
     <form id="form" enctype="multipart/form-data">
         <input type="file" id="file" name="filesToUpload[]" onchange="selectDone()">
     </form>
+    <p id="poweredby"><b>Powerd by</b> Alex Cloud API</p>
 </div>
 
 <style>
@@ -16,12 +26,16 @@
         border-radius: 10px;
         padding: 20px;
         transition: all 0.2s;
-
-        width: 50vw;
-        position: fixed;
-        top: 50%;
+        position: relative;
+        width: calc(100% - 40px);
+    }
+    #poweredby {
+        position: absolute;
+        bottom: -10px;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: #666;
     }
     .dropOver {
         border-style: solid !important;
@@ -123,8 +137,19 @@
             data: formData,
             success: function (data) {
                 console.log(data);
-                if (data == "upload_done")
-                    removeLoading();
+                if (!data.includes("error")) {
+                    setTimeout(function () {
+                        removeLoading();
+                    }, 2000);
+                    <?php
+                        if (isset($otherFunc)) {
+                            echo $otherFunc . "(data);";
+                        }
+                    ?>
+                } else {
+                    document.getElementById("drop_zone").classList.remove("dropped");
+                    document.getElementById("drop_zone_text").innerHTML = 'Error.';
+                }
             },
             cache: false,
             contentType: false,
@@ -132,7 +157,10 @@
         });
     }
     function removeLoading() {
-        document.getElementById("drop_zone").classList.remove("dropped");
-        document.getElementById("drop_zone_text").innerHTML = 'Drop your files here or select them.';
+        document.getElementById("drop_zone_text").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg> Your files were uploaded.';
+        setTimeout(function () {
+            document.getElementById("drop_zone").classList.remove("dropped");
+            document.getElementById("drop_zone_text").innerHTML = '<?php echo $uploadText; ?>';
+        }, 1000);
     }
 </script>
